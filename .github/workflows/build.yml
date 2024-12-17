@@ -7,14 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Použijeme Windows server
+    runs-on: windows-latest  # Workflow beží na Windows serveri
 
     steps:
-      # 1. Stiahnutie repozitára
+      # 1. Stiahnutie kódu z repozitára
       - name: Checkout repository
-        uses: actions/checkout@v3  # Stiahne najnovší kód z hlavnej vetvy
+        uses: actions/checkout@v3
 
-      # 2. Nastavenie Pythonu 3.8 (kompatibilného s Windows 7/8)
+      # 2. Nastavenie Pythonu 3.8 (pre Windows 7/8 kompatibilitu)
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
@@ -24,21 +24,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller pillow reportlab  # Inštalácia potrebných knižníc
+          pip install -r requirements.txt
 
       # 4. Vytvorenie priečinka na fotografie
       - name: Create photos directory
-        run: mkdir photos  # Vytvorí priečinok "photos"
+        run: mkdir photos
 
       # 5. Zostavenie .exe súboru pomocou PyInstaller
       - name: Build executable
         run: |
-          pyinstaller --onefile --noconsole --icon=logo.png main.py
-        shell: cmd  # Použitie Windows cmd pre správnu kompatibilitu
+          pyinstaller --onefile --noconsole --debug all --icon=logo.png main.py
+        shell: cmd
 
-      # 6. Nahratie výsledného .exe súboru
+      # 6. Nahratie výsledného .exe súboru ako artefakt
       - name: Upload executable
-        uses: actions/upload-artifact@v4  # Najnovšia verzia
+        uses: actions/upload-artifact@v4
         with:
-          name: evidencia-osob-exe  # Názov artefaktu
-          path: dist/main.exe       # Cesta k .exe súboru
+          name: evidencia-osob-exe
+          path: dist/main.exe
