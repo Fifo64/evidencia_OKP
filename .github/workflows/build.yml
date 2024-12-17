@@ -3,7 +3,7 @@ name: Build Windows Executable
 on:
   push:
     branches:
-      - main  # Spustí sa, keď pushneš zmeny do hlavnej vetvy
+      - main  # Spustí sa pri každom pushnutí do hlavnej vetvy
 
 jobs:
   build:
@@ -11,28 +11,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # Stiahne tvoj kód
+        uses: actions/checkout@v3  # Stiahne kód z tvojho repozitára
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
-          python-version: 3.8  # Použitie kompatibilnej verzie Pythonu
+          python-version: 3.8  # Použijeme Python 3.8 pre kompatibilitu s Windows 7/8
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install pyinstaller pillow  # Nainštaluje závislosti
+          python -m pip install --upgrade pip
+          pip install pyinstaller pillow
 
       - name: Create photos directory
-        run: mkdir photos  # Vytvorí priečinok photos, ak neexistuje
+        run: mkdir photos  # Automaticky vytvorí priečinok photos
 
-      - name: Build executable with PyInstaller
+      - name: Build executable
         run: |
           pyinstaller --onefile --noconsole --win-private-assemblies --icon=logo.png main.py
-        shell: cmd  # Príkazový shell pre správnu kompatibilitu
+        shell: cmd
 
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
           name: evidencia-osob-exe
-          path: dist/main.exe  # Nahraj .exe súbor ako artefakt
+          path: dist/main.exe  # Nahraj .exe ako artefakt
