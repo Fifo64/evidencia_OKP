@@ -1,0 +1,35 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches:
+      - main  # Spustí sa pri pushnutí do hlavnej vetvy
+
+jobs:
+  build:
+    runs-on: windows-latest  # Akcia sa spustí na Windows serveri
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Stiahne najnovší kód z tvojho repozitára
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.10  # Verzia Pythonu, ktorú používaš
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+          pip install pillow  # Inštalácia potrebných knižníc
+
+      - name: Build .exe with PyInstaller
+        run: |
+          pyinstaller --onefile --noconsole --icon=logo.png main.py
+          echo "Build completed successfully."
+
+      - name: Upload built .exe
+        uses: actions/upload-artifact@v3
+        with:
+          name: evidencia-osob-exe
+          path: dist/main.exe  # Cesta k výslednému .exe súboru
