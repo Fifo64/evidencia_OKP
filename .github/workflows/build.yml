@@ -3,36 +3,42 @@ name: Build Windows Executable
 on:
   push:
     branches:
-      - main  # Spustí sa pri každom pushnutí do hlavnej vetvy
+      - main  # Workflow sa spustí po pushnutí do hlavnej vetvy
 
 jobs:
   build:
-    runs-on: windows-latest  # Spustenie na Windows serveri
+    runs-on: windows-latest  # Použijeme Windows server
 
     steps:
+      # 1. Stiahnutie repozitára
       - name: Checkout repository
-        uses: actions/checkout@v3  # Stiahne kód z tvojho repozitára
+        uses: actions/checkout@v3  # Stiahne najnovší kód z hlavnej vetvy
 
+      # 2. Nastavenie Pythonu 3.8 (kompatibilného s Windows 7/8)
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
-          python-version: 3.8  # Použijeme Python 3.8 pre kompatibilitu s Windows 7/8
+          python-version: 3.8
 
+      # 3. Inštalácia závislostí
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller pillow  # Inštaluje potrebné knižnice
+          pip install pyinstaller pillow reportlab  # Inštalácia potrebných knižníc
 
+      # 4. Vytvorenie priečinka na fotografie
       - name: Create photos directory
-        run: mkdir photos  # Automaticky vytvorí priečinok photos
+        run: mkdir photos  # Vytvorí priečinok "photos"
 
+      # 5. Zostavenie .exe súboru pomocou PyInstaller
       - name: Build executable
         run: |
           pyinstaller --onefile --noconsole --icon=logo.png main.py
-        shell: cmd
+        shell: cmd  # Použitie Windows cmd pre správnu kompatibilitu
 
+      # 6. Nahratie výsledného .exe súboru
       - name: Upload executable
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Najnovšia verzia
         with:
-          name: evidencia-osob-exe
-          path: dist/main.exe  # Nahraj .exe ako artefakt
+          name: evidencia-osob-exe  # Názov artefaktu
+          path: dist/main.exe       # Cesta k .exe súboru
