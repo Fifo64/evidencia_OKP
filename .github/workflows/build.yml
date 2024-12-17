@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Nastavenie Pythonu 3.8 (pre Windows 7/8 kompatibilitu)
+      # 2. Nastavenie Pythonu 3.8 (kompatibilita pre Windows 7 a 8)
       - name: Set up Python 3.8
         uses: actions/setup-python@v3
         with:
@@ -33,8 +33,8 @@ jobs:
       # 5. Zostavenie .exe súboru pomocou PyInstaller
       - name: Build executable
         run: |
-          pyinstaller --onefile --noconsole --debug all --icon=logo.png main.py
-        shell: cmd
+          pyinstaller --onefile --noconsole --icon=logo.png main.py
+        shell: cmd  # Použitie Windows CMD
 
       # 6. Nahratie výsledného .exe súboru ako artefakt
       - name: Upload executable
@@ -42,4 +42,3 @@ jobs:
         with:
           name: evidencia-osob-exe
           path: dist/main.exe
-
