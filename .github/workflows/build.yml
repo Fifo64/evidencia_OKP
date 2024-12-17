@@ -42,3 +42,4 @@ jobs:
         with:
           name: evidencia-osob-exe
           path: dist/main.exe
+
